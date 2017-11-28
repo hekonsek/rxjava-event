@@ -16,7 +16,10 @@
  */
 package com.github.hekonsek.rxjava.event;
 
-public class Headers {
+public final class Headers {
+
+    private Headers() {
+    }
 
     public static final String KEY = "rxjava.event.key";
 

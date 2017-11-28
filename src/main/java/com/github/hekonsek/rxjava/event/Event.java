@@ -20,6 +20,12 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
+/**
+ * Class representing event. It can be used to carry information about event body (payload) and its
+ * metadata (headers).
+
+ * @param <T> Payload type.
+ */
 public class Event<T> {
 
     private final Map<String, Object> headers;
