@@ -4,7 +4,10 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
-public class Events {
+public final class Events {
+
+    private Events() {
+    }
 
     static <T> Event<T> event(Map<String, Object> headers, T payload) {
         return new Event<>(headers, payload);
