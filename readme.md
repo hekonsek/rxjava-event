@@ -17,28 +17,20 @@ In order to start using RxJava Event add the following dependency to your Maven 
 
 ## Usage
 
-In order to register echo function which just copies incoming event from Kafka topic `source` to topic `target`,
-create an appropriate `Pipe` definition and start it using `Pipes` instance:
+RxJava Events provides simple event class that can be used to carry information about event body (`payload`) and its metadata (`headers`).
 
 ```
-import io.vertx.core.Vertx;
-import com.github.hekonsek.vertx.pipes.Pipe;
-import com.github.hekonsek.vertx.pipes.Pipes;
-import com.github.hekonsek.vertx.pipes.SimpleFunctionRegistry;
+import static com.github.hekonsek.rxjava.event.Events.event;
 
-import static io.vertx.core.Vertx.vertx;
-import static com.github.hekonsek.vertx.pipes.Pipe.pipe;
-import static com.github.hekonsek.vertx.pipes.Pipes.pipes;
 ...
 
-Vertx vertx = vertx();
+Event<String> event = event("myPayload");
+assertThat(event.payload()).isEqualTo("myPayload");
 
-SimpleFunctionRegistry functionRegistry = new SimpleFunctionRegistry();
-functionRegistry.registerFunction("echoFunction", event -> event.reply(event.body()));
+Map<String, Object> headers = ImmutableMap.of("myHeader", "someValue");
+Event<String> eventWithHeaders = event("myPayload", headers);
+assertThat(eventWithHeaders.headers()).isEqualTo(headers);
 
-Pipes pipes = pipes(vertx, functionRegistry);
-
-pipes.startPipe(pipe("myFunctionPipe", "sourceTopic", "echoFunction", "targetTopic"));
 ```
 
 ## License
