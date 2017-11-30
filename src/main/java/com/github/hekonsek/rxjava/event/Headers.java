@@ -25,12 +25,23 @@ public final class Headers {
 
     public static final String ADDRESS = "rxjava.event.address";
 
+    public static final String ORIGINAL = "rxjava.event.original";
+
     public static String key(Event event) {
         return (String) event.headers().get(KEY);
     }
 
     public static String address(Event event) {
         return (String) event.headers().get(ADDRESS);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T original(Event event, Class<T> type) {
+        Object originalEvent = event.headers().get(ORIGINAL);
+        if(!type.isAssignableFrom(originalEvent.getClass())) {
+            throw new IllegalArgumentException("Original event is not of type: " + type.getName());
+        }
+        return (T) originalEvent;
     }
 
 }

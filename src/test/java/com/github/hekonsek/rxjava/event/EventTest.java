@@ -19,9 +19,15 @@ package com.github.hekonsek.rxjava.event;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static com.github.hekonsek.rxjava.event.Events.event;
+import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
 import static com.github.hekonsek.rxjava.event.Headers.KEY;
+import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
+import static com.github.hekonsek.rxjava.event.Headers.address;
 import static com.github.hekonsek.rxjava.event.Headers.key;
+import static com.github.hekonsek.rxjava.event.Headers.original;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EventTest {
@@ -43,6 +49,19 @@ public class EventTest {
     public void shouldCreateEventWithKey() {
         Event<String> event = event(ImmutableMap.of(KEY, "foo"), null);
         assertThat(key(event)).isEqualTo("foo");
+    }
+
+    @Test
+    public void shouldCreateEventWithAddress() {
+        Event<String> event = event(ImmutableMap.of(ADDRESS, "foo"), null);
+        assertThat(address(event)).isEqualTo("foo");
+    }
+
+    @Test
+    public void shouldGetOriginalEvent() {
+        Date originalEvent = new Date();
+        Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), null);
+        assertThat(original(event, Date.class)).isEqualTo(originalEvent);
     }
 
 }
