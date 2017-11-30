@@ -19,6 +19,8 @@ In order to start using RxJava Event add the following dependency to your Maven 
 
 RxJava Events provides simple event class that can be used to carry information about event body (`payload`) and its metadata (`headers`).
 
+Event payload is the primary piece of data carried by an event. Here is how you can create event with a payload:
+
 ```
 import static com.github.hekonsek.rxjava.event.Events.event;
 
@@ -26,10 +28,38 @@ import static com.github.hekonsek.rxjava.event.Events.event;
 
 Event<String> event = event("myPayload");
 assertThat(event.payload()).isEqualTo("myPayload");
+```
 
+Event headers is a map describing event metadata.
+
+```
 Map<String, Object> headers = ImmutableMap.of("myHeader", "someValue");
 Event<String> eventWithHeaders = event("myPayload", headers);
 assertThat(eventWithHeaders.headers()).isEqualTo(headers);
+```
+
+While headers are represented as arbitrary `Map<String, Object` object, RxJava Event provides convention and helper methods to 
+access common metadata:
+
+### Key header
+
+*Key* header represents identifier of a payload in a form of `String`. It is useful for representing entities in stream of events, in particular 
+for event sourcing scenarios.
+
+For example you can associate events to certain people using their name as identifier:
+
+```
+import static com.github.hekonsek.rxjava.event.Headers.KEY;
+
+...
+
+Map<String, Object> johnHeaders = ImmutableMap.of(KEY, "john");
+int johnAge = 30;
+Event<String> eventWithHeaders = event(johnAge, johnHeaders);
+
+Map<String, Object> fredHeaders = ImmutableMap.of(KEY, "fred");
+int fredAge = 30;
+Event<String> eventWithHeaders = event(fredAge, fredHeaders);
 
 ```
 
