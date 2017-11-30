@@ -22,7 +22,7 @@
 
         <!-- Dependencies versions -->
         <assertj.version>3.6.2</assertj.version>
-        <guava.version>23.4-jre</guava.version>
+        <guava.version>23.5-jre</guava.version>
 
         <!-- Plugins versions -->
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
