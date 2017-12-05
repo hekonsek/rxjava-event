@@ -43,8 +43,8 @@ access common metadata:
 
 ### Key header
 
-*Key* header represents identifier of a payload in a form of `String`. It is useful for representing entities in stream of events, in particular 
-for event sourcing scenarios.
+**Key** header represents identifier of a payload in a form of `String`. It is useful for representing entities in stream of events, in particular
+for event sourcing scenarios. This header is optional.
 
 For example you can associate events to certain people using their name as identifier:
 
@@ -61,6 +61,21 @@ Map<String, Object> fredHeaders = ImmutableMap.of(KEY, "fred");
 int fredAge = 30;
 Event<String> eventWithHeaders = event(fredAge, fredHeaders);
 
+```
+
+### Address header
+
+**Address** header represents name of the channel from which an event originated. This can be Apache Kafka topic name, AMQP address,
+HTTP request URI and so forth. This header is optional.
+
+```
+import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
+import static com.github.hekonsek.rxjava.event.Headers.address;
+
+...
+
+Event<String> event = event("payload body", ImmutableMap.of(ADDRESS, "from"));
+String address = address(event);
 ```
 
 ## License

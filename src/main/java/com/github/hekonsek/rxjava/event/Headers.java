@@ -16,32 +16,43 @@
  */
 package com.github.hekonsek.rxjava.event;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 public final class Headers {
 
     private Headers() {
     }
 
-    public static final String KEY = "rxjava.event.key";
+    public static final String ORIGINAL = "rxjava.event.original";
 
     public static final String ADDRESS = "rxjava.event.address";
 
-    public static final String ORIGINAL = "rxjava.event.original";
+    public static final String KEY = "rxjava.event.key";
 
-    public static String key(Event event) {
-        return (String) event.headers().get(KEY);
+    public static final String RESPONSE_CALLBACK = "rxjava.event.response.callback";
+
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<T> original(Event event, Class<T> type) {
+        Object originalEvent = event.headers().get(ORIGINAL);
+        if(!type.isAssignableFrom(originalEvent.getClass())) {
+            throw new IllegalArgumentException("Original event is not of type: " + type.getName());
+        }
+        return ofNullable((T) originalEvent);
     }
 
     public static String address(Event event) {
         return (String) event.headers().get(ADDRESS);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T original(Event event, Class<T> type) {
-        Object originalEvent = event.headers().get(ORIGINAL);
-        if(!type.isAssignableFrom(originalEvent.getClass())) {
-            throw new IllegalArgumentException("Original event is not of type: " + type.getName());
-        }
-        return (T) originalEvent;
+    public static String key(Event event) {
+        return (String) event.headers().get(KEY);
+    }
+
+    public static <R> R responseCallback(Event event, Class<? extends ResponseCallback> type) {
+        ResponseCallback callback = (ResponseCallback) event.headers().get(RESPONSE_CALLBACK);
+        return (R) callback;
     }
 
 }

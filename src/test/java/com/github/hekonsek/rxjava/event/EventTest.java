@@ -25,12 +25,21 @@ import static com.github.hekonsek.rxjava.event.Events.event;
 import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
 import static com.github.hekonsek.rxjava.event.Headers.KEY;
 import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
+import static com.github.hekonsek.rxjava.event.Headers.RESPONSE_CALLBACK;
 import static com.github.hekonsek.rxjava.event.Headers.address;
 import static com.github.hekonsek.rxjava.event.Headers.key;
 import static com.github.hekonsek.rxjava.event.Headers.original;
+import static com.github.hekonsek.rxjava.event.Headers.responseCallback;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EventTest {
+
+    @Test
+    public void shouldGetOriginalEvent() {
+        Date originalEvent = new Date();
+        Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), null);
+        assertThat(original(event, Date.class)).contains(originalEvent);
+    }
 
     @Test
     public void shouldCreateEventWithPayloadOnly() {
@@ -58,10 +67,12 @@ public class EventTest {
     }
 
     @Test
-    public void shouldGetOriginalEvent() {
-        Date originalEvent = new Date();
-        Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), null);
-        assertThat(original(event, Date.class)).isEqualTo(originalEvent);
+    public void shouldSendResponse() {
+        TestResponseCallback callback = new TestResponseCallback();
+        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
+        callback = responseCallback(event, TestResponseCallback.class);
+        callback.respond("response");
+        assertThat(callback.response).isEqualTo("response");
     }
 
 }
