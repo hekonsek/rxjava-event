@@ -70,8 +70,7 @@ public class EventTest {
     public void shouldSendResponse() {
         TestResponseCallback callback = new TestResponseCallback();
         Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
-        callback = responseCallback(event, TestResponseCallback.class);
-        callback.respond("response");
+        responseCallback(event).get().respond("response");
         assertThat(callback.response).isEqualTo("response");
     }
 

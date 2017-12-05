@@ -50,9 +50,8 @@ public final class Headers {
         return (String) event.headers().get(KEY);
     }
 
-    public static <R> R responseCallback(Event event, Class<? extends ResponseCallback> type) {
-        ResponseCallback callback = (ResponseCallback) event.headers().get(RESPONSE_CALLBACK);
-        return (R) callback;
+    public static Optional<ResponseCallback> responseCallback(Event event) {
+        return ofNullable((ResponseCallback) event.headers().get(RESPONSE_CALLBACK));
     }
 
 }
