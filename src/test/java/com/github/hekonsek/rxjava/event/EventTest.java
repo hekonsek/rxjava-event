@@ -31,14 +31,36 @@ import static com.github.hekonsek.rxjava.event.Headers.key;
 import static com.github.hekonsek.rxjava.event.Headers.original;
 import static com.github.hekonsek.rxjava.event.Headers.responseCallback;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class EventTest {
+
+    @Test
+    public void shouldCopyWithNewPayload() {
+        Event<String> event = event("old").withPayload("new");
+        assertThat(event.payload()).isEqualTo("new");
+    }
+
+    @Test
+    public void shouldCopyAndAddHeader() {
+        Event<String> event = event("old").withHeader("header", "headerValue");
+        assertThat(event.headers()).containsEntry("header", "headerValue");
+    }
 
     @Test
     public void shouldGetOriginalEvent() {
         Date originalEvent = new Date();
         Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), null);
         assertThat(original(event, Date.class)).contains(originalEvent);
+    }
+
+    @Test
+    public void shouldValidateInvalidOriginalEvent() {
+        Event<String> event = event(ImmutableMap.of(ORIGINAL, new Date()), null);
+        Throwable ex = catchThrowable(() -> original(event, String.class));
+        assertThat(ex).
+                isInstanceOf(IllegalArgumentException.class).
+                hasMessageContaining("event is not of type");
     }
 
     @Test

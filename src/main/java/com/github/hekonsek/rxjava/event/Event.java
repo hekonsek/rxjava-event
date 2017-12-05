@@ -41,8 +41,17 @@ public class Event<T> {
         return headers;
     }
 
+    public Event<T> withHeader(String key, Object value) {
+        Map<String, Object> headers = ImmutableMap.<String, Object>builder().putAll(this.headers).put(key, value).build();
+        return new Event<>(headers, payload);
+    }
+
     public T payload() {
         return payload;
+    }
+
+    public Event<T> withPayload(T payload) {
+        return new Event<>(headers, payload);
     }
 
 }
