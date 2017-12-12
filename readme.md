@@ -23,6 +23,7 @@ RxJava Events provides simple event class that can be used to carry information 
 Event payload is the primary piece of data carried by an event. Here is how you can create event with a payload:
 
 ```
+import com.github.hekonsek.rxjava.event.Event;
 import static com.github.hekonsek.rxjava.event.Events.event;
 
 ...
@@ -34,6 +35,12 @@ assertThat(event.payload()).isEqualTo("myPayload");
 Event headers is a map describing event metadata.
 
 ```
+import com.github.hekonsek.rxjava.event.Event;
+import com.google.common.collect.ImmutableMap;
+import static com.github.hekonsek.rxjava.event.Events.event;
+
+...
+
 Map<String, Object> headers = ImmutableMap.of("myHeader", "someValue");
 Event<String> eventWithHeaders = event("myPayload", headers);
 assertThat(eventWithHeaders.headers()).isEqualTo(headers);
@@ -41,6 +48,39 @@ assertThat(eventWithHeaders.headers()).isEqualTo(headers);
 
 While headers are represented as arbitrary `Map<String, Object` object, RxJava Event provides convention and helper methods to 
 access common metadata:
+
+### Original event header
+
+**Original event** header holds an original object that has been used to create `Event` instance. This can be Apache Kafka record,
+Vert.x HTTP request object, JMS API message and so forth. This header is optional.
+
+```
+import java.util.Date;
+
+import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
+import static com.github.hekonsek.rxjava.event.Headers.original;
+
+...
+
+Date theOriginalEvent = new Date();
+Event<String> event = event(originalEvent.getTime(), ImmutableMap.of(ORIGINAL, theOriginalEvent));
+Date originalEvent = original(event, Date.class);
+```
+
+### Address header
+
+**Address** header represents name of the channel from which an event originated. This can be Apache Kafka topic name, AMQP address,
+HTTP request URI and so forth. This header is optional.
+
+```
+import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
+import static com.github.hekonsek.rxjava.event.Headers.address;
+
+...
+
+Event<String> event = event("payload body", ImmutableMap.of(ADDRESS, "from"));
+String address = address(event);
+```
 
 ### Key header
 
@@ -62,21 +102,6 @@ Map<String, Object> fredHeaders = ImmutableMap.of(KEY, "fred");
 int fredAge = 30;
 Event<String> eventWithHeaders = event(fredAge, fredHeaders);
 
-```
-
-### Address header
-
-**Address** header represents name of the channel from which an event originated. This can be Apache Kafka topic name, AMQP address,
-HTTP request URI and so forth. This header is optional.
-
-```
-import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
-import static com.github.hekonsek.rxjava.event.Headers.address;
-
-...
-
-Event<String> event = event("payload body", ImmutableMap.of(ADDRESS, "from"));
-String address = address(event);
 ```
 
 ## License
