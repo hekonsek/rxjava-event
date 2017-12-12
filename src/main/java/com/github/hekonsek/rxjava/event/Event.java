@@ -44,8 +44,8 @@ public class Event<T> {
     }
 
     public Event<T> withHeader(String key, Object value) {
-        Map<String, Object> headers = ImmutableMap.<String, Object>builder().putAll(this.headers).put(key, value).build();
-        return new Event<>(headers, payload);
+        Map<String, Object> copiedHeaders = ImmutableMap.<String, Object>builder().putAll(this.headers).put(key, value).build();
+        return new Event<>(copiedHeaders, payload);
     }
 
     public T payload() {
