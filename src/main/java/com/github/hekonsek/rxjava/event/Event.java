@@ -30,17 +30,33 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class Event<T> {
 
+    // Members
+
     private final Map<String, Object> headers;
 
     private final T payload;
+
+    // Constructors
 
     public Event(Map<String, Object> headers, T payload) {
         this.headers = ImmutableMap.copyOf(headers);
         this.payload = payload;
     }
 
+    // Accessors
+
     public Map<String, Object> headers() {
         return headers;
+    }
+
+    public T payload() {
+        return payload;
+    }
+
+    // Copy-mutators
+
+    public Event<T> withPayload(T payload) {
+        return new Event<>(headers, payload);
     }
 
     public Event<T> withHeader(String key, Object value) {
@@ -48,13 +64,7 @@ public class Event<T> {
         return new Event<>(copiedHeaders, payload);
     }
 
-    public T payload() {
-        return payload;
-    }
-
-    public Event<T> withPayload(T payload) {
-        return new Event<>(headers, payload);
-    }
+    // Object overriddens
 
     @Override public String toString() {
         return toStringHelper(this).
