@@ -20,6 +20,8 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Class representing event. It can be used to carry information about event body (payload) and its
  * metadata (headers).
@@ -52,6 +54,13 @@ public class Event<T> {
 
     public Event<T> withPayload(T payload) {
         return new Event<>(headers, payload);
+    }
+
+    @Override public String toString() {
+        return toStringHelper(this).
+                add("headers", headers).
+                add("payload", payload).
+                toString();
     }
 
 }

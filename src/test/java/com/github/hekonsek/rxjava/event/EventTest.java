@@ -96,4 +96,16 @@ public class EventTest {
         assertThat(callback.response).isEqualTo("response");
     }
 
+    @Test
+    public void shouldIncludePayloadInToString() {
+        Event<String> event = event("baz");
+        assertThat(event.toString()).contains("payload=baz");
+    }
+
+    @Test
+    public void shouldIncludeHeadersInToString() {
+        Event<String> event = event(ImmutableMap.of("foo", "bar"), null);
+        assertThat(event.toString()).contains("headers={foo=bar}");
+    }
+
 }
