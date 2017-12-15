@@ -21,8 +21,8 @@ import io.reactivex.Completable;
 /**
  * Callback that can be used to send reply back to the client who generated an event.
  */
-public interface ResponseCallback {
+public interface ReplyHandler {
 
-    Completable respond(Object response);
+    Completable reply(Object response);
 
 }

@@ -25,11 +25,11 @@ import static com.github.hekonsek.rxjava.event.Events.event;
 import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
 import static com.github.hekonsek.rxjava.event.Headers.KEY;
 import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
-import static com.github.hekonsek.rxjava.event.Headers.RESPONSE_CALLBACK;
+import static com.github.hekonsek.rxjava.event.Headers.REPLY_CALLBACK;
 import static com.github.hekonsek.rxjava.event.Headers.address;
 import static com.github.hekonsek.rxjava.event.Headers.key;
 import static com.github.hekonsek.rxjava.event.Headers.original;
-import static com.github.hekonsek.rxjava.event.Headers.responseCallback;
+import static com.github.hekonsek.rxjava.event.Headers.replyHandler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -89,25 +89,25 @@ public class EventTest {
     }
 
     @Test
-    public void shouldSendResponse() {
-        TestResponseCallback callback = new TestResponseCallback();
-        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
-        responseCallback(event).get().respond("response");
+    public void shouldSendReply() {
+        TestReplyHandler callback = new TestReplyHandler();
+        Event<String> event = event(ImmutableMap.of(REPLY_CALLBACK, callback), null);
+        replyHandler(event).get().reply("response");
         assertThat(callback.response).isEqualTo("response");
     }
 
     @Test
-    public void shouldCompleteResponse() {
-        TestResponseCallback callback = new TestResponseCallback();
-        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
-        responseCallback(event).get().respond("response").blockingAwait();
+    public void shouldCompleteReply() {
+        TestReplyHandler callback = new TestReplyHandler();
+        Event<String> event = event(ImmutableMap.of(REPLY_CALLBACK, callback), null);
+        replyHandler(event).get().reply("response").blockingAwait();
     }
 
     @Test
-    public void shouldCompleteAsyncResponse() {
-        AsyncTestResponseCallback callback = new AsyncTestResponseCallback();
-        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
-        responseCallback(event).get().respond("response").blockingAwait();
+    public void shouldCompleteAsyncReply() {
+        AsyncTestReplyHandler callback = new AsyncTestReplyHandler();
+        Event<String> event = event(ImmutableMap.of(REPLY_CALLBACK, callback), null);
+        replyHandler(event).get().reply("response").blockingAwait();
     }
 
     @Test

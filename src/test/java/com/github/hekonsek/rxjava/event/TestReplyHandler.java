@@ -20,11 +20,11 @@ import io.reactivex.Completable;
 
 import static io.reactivex.Completable.complete;
 
-public class TestResponseCallback implements ResponseCallback {
+public class TestReplyHandler implements ReplyHandler {
 
     Object response;
 
-    @Override public Completable respond(Object responseSubject) {
+    @Override public Completable reply(Object responseSubject) {
         response = responseSubject;
         return complete();
     }

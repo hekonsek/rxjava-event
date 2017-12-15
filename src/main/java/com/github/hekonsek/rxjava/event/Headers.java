@@ -31,7 +31,7 @@ public final class Headers {
 
     public static final String KEY = "rxjava.event.key";
 
-    public static final String RESPONSE_CALLBACK = "rxjava.event.response.callback";
+    public static final String REPLY_CALLBACK = "rxjava.event.reply.callback";
 
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> original(Event event, Class<T> type) {
@@ -50,8 +50,8 @@ public final class Headers {
         return (String) event.headers().get(KEY);
     }
 
-    public static Optional<ResponseCallback> responseCallback(Event event) {
-        return ofNullable((ResponseCallback) event.headers().get(RESPONSE_CALLBACK));
+    public static Optional<ReplyHandler> replyHandler(Event event) {
+        return ofNullable((ReplyHandler) event.headers().get(REPLY_CALLBACK));
     }
 
 }
