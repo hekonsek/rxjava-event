@@ -16,8 +16,13 @@
  */
 package com.github.hekonsek.rxjava.event;
 
+import io.reactivex.Completable;
+
+/**
+ * Callback that can be used to send reply back to the client who generated an event.
+ */
 public interface ResponseCallback {
 
-    void respond(Object response);
+    Completable respond(Object response);
 
 }

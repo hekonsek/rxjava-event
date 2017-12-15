@@ -97,6 +97,20 @@ public class EventTest {
     }
 
     @Test
+    public void shouldCompleteResponse() {
+        TestResponseCallback callback = new TestResponseCallback();
+        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
+        responseCallback(event).get().respond("response").blockingAwait();
+    }
+
+    @Test
+    public void shouldCompleteAsyncResponse() {
+        AsyncTestResponseCallback callback = new AsyncTestResponseCallback();
+        Event<String> event = event(ImmutableMap.of(RESPONSE_CALLBACK, callback), null);
+        responseCallback(event).get().respond("response").blockingAwait();
+    }
+
+    @Test
     public void shouldIncludePayloadInToString() {
         Event<String> event = event("baz");
         assertThat(event.toString()).contains("payload=baz");

@@ -18,15 +18,17 @@ package com.github.hekonsek.rxjava.event;
 
 import io.reactivex.Completable;
 
-import static io.reactivex.Completable.complete;
-
-public class TestResponseCallback implements ResponseCallback {
+public class AsyncTestResponseCallback implements ResponseCallback {
 
     Object response;
 
     @Override public Completable respond(Object responseSubject) {
-        response = responseSubject;
-        return complete();
+        return Completable.create(source ->
+                new Thread(() -> {
+                    response = responseSubject;
+                    source.onComplete();
+                }).start()
+        );
     }
 
 }
