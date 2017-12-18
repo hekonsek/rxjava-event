@@ -55,16 +55,16 @@ access common metadata:
 Vert.x HTTP request object, JMS API message and so forth. This header is optional.
 
 ```
+import com.google.common.collect.ImmutableMap;
 import java.util.Date;
-
 import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
-import static com.github.hekonsek.rxjava.event.Headers.original;
+import static com.github.hekonsek.rxjava.event.Headers.requiredOriginal;
 
 ...
 
 Date theOriginalEvent = new Date();
 Event<String> event = event(originalEvent.getTime(), ImmutableMap.of(ORIGINAL, theOriginalEvent));
-Date originalEvent = original(event, Date.class);
+Date originalEvent = requiredOriginal(event, Date.class);
 ```
 
 ### Address header
@@ -73,13 +73,14 @@ Date originalEvent = original(event, Date.class);
 HTTP request URI and so forth. This header is optional.
 
 ```
+import com.google.common.collect.ImmutableMap;
 import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
-import static com.github.hekonsek.rxjava.event.Headers.address;
+import static com.github.hekonsek.rxjava.event.Headers.requiredAddress;
 
 ...
 
 Event<String> event = event("payload body", ImmutableMap.of(ADDRESS, "from"));
-String address = address(event);
+String address = requiredAddress(event);
 ```
 
 ### Key header
@@ -91,17 +92,13 @@ For example you can associate events to certain people using their name as ident
 
 ```
 import static com.github.hekonsek.rxjava.event.Headers.KEY;
+import static com.github.hekonsek.rxjava.event.Headers.requiredKey;
 
 ...
 
-Map<String, Object> johnHeaders = ImmutableMap.of(KEY, "john");
 int johnAge = 30;
-Event<String> eventWithHeaders = event(johnAge, johnHeaders);
-
-Map<String, Object> fredHeaders = ImmutableMap.of(KEY, "fred");
-int fredAge = 30;
-Event<String> eventWithHeaders = event(fredAge, fredHeaders);
-
+Event<String> event = event(johnAge, ImmutableMap.of(KEY, "john"));
+String subjectName = requiredKey(event);
 ```
 
 ## License
