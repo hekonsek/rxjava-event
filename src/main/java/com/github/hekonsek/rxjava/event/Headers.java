@@ -22,6 +22,8 @@ import static java.util.Optional.ofNullable;
 
 public final class Headers {
 
+    // Constants
+
     public static final String ORIGINAL = "rxjava.event.original";
 
     public static final String ADDRESS = "rxjava.event.address";
@@ -29,6 +31,8 @@ public final class Headers {
     public static final String KEY = "rxjava.event.key";
 
     public static final String REPLY_CALLBACK = "rxjava.event.reply.callback";
+
+    // Constructors
 
     private Headers() {
     }
@@ -42,16 +46,34 @@ public final class Headers {
         return ofNullable((T) originalEvent);
     }
 
-    public static String address(Event event) {
-        return (String) event.headers().get(ADDRESS);
+    public static <T> T requiredOriginal(Event event, Class<T> type) {
+        return original(event, type).orElseThrow(() -> new IllegalArgumentException("Original event header not found."));
     }
 
-    public static String key(Event event) {
-        return (String) event.headers().get(KEY);
+    public static Optional<String> address(Event event) {
+        return ofNullable((String) event.headers().get(ADDRESS));
     }
+
+    public static String requiredAddress(Event event) {
+        return address(event).orElseThrow(() -> new IllegalArgumentException("Address header not found."));
+    }
+
+
+    public static Optional<String> key(Event event) {
+        return ofNullable((String) event.headers().get(KEY));
+    }
+
+    public static String requiredKey(Event event) {
+        return key(event).orElseThrow(() -> new IllegalArgumentException("Key header not found."));
+    }
+
 
     public static Optional<ReplyHandler> replyHandler(Event event) {
         return ofNullable((ReplyHandler) event.headers().get(REPLY_CALLBACK));
+    }
+
+    public static ReplyHandler requiredReplyHandler(Event event) {
+        return replyHandler(event).orElseThrow(() -> new IllegalArgumentException("No reply handler found."));
     }
 
 }

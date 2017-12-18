@@ -26,47 +26,52 @@ import static com.github.hekonsek.rxjava.event.Headers.ADDRESS;
 import static com.github.hekonsek.rxjava.event.Headers.KEY;
 import static com.github.hekonsek.rxjava.event.Headers.ORIGINAL;
 import static com.github.hekonsek.rxjava.event.Headers.REPLY_CALLBACK;
-import static com.github.hekonsek.rxjava.event.Headers.address;
-import static com.github.hekonsek.rxjava.event.Headers.key;
 import static com.github.hekonsek.rxjava.event.Headers.original;
 import static com.github.hekonsek.rxjava.event.Headers.replyHandler;
+import static com.github.hekonsek.rxjava.event.Headers.requiredAddress;
+import static com.github.hekonsek.rxjava.event.Headers.requiredKey;
+import static com.github.hekonsek.rxjava.event.Headers.requiredOriginal;
+import static com.github.hekonsek.rxjava.event.Headers.requiredReplyHandler;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class EventTest {
 
+    String originalEvent = randomUUID().toString();
+
+    String payload = randomUUID().toString();
+
+    Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), payload);
+
     @Test
     public void shouldCopyWithNewPayload() {
-        Event<String> event = event("old").withPayload("new");
-        assertThat(event.payload()).isEqualTo("new");
+        Event<String> newEvent = event.withPayload("new");
+        assertThat(newEvent.payload()).isEqualTo("new");
     }
 
     @Test
     public void shouldCopyAndAddHeader() {
-        Event<String> event = event("old").withHeader("header", "headerValue");
-        assertThat(event.headers()).containsEntry("header", "headerValue");
+        Event<String> newEvent = event.withHeader("header", "headerValue");
+        assertThat(newEvent.headers()).containsEntry("header", "headerValue");
     }
 
     @Test
     public void shouldGetOriginalEvent() {
-        Date originalEvent = new Date();
-        Event<String> event = event(ImmutableMap.of(ORIGINAL, originalEvent), null);
-        assertThat(original(event, Date.class)).contains(originalEvent);
+        assertThat(requiredOriginal(event, String.class)).isEqualTo(originalEvent);
     }
 
     @Test
     public void shouldValidateInvalidOriginalEvent() {
-        Event<String> event = event(ImmutableMap.of(ORIGINAL, new Date()), null);
-        Throwable ex = catchThrowable(() -> original(event, String.class));
+        Throwable ex = catchThrowable(() -> original(event, Date.class));
         assertThat(ex).
                 isInstanceOf(IllegalArgumentException.class).
                 hasMessageContaining("event is not of type");
     }
 
     @Test
-    public void shouldCreateEventWithPayloadOnly() {
-        Event<String> event = event("foo");
-        assertThat(event.payload()).isEqualTo("foo");
+    public void shouldCreateEventWithPayload() {
+        assertThat(event.payload()).isEqualTo(payload);
     }
 
     @Test
@@ -79,20 +84,20 @@ public class EventTest {
     @Test
     public void shouldCreateEventWithKey() {
         Event<String> event = event(ImmutableMap.of(KEY, "foo"), null);
-        assertThat(key(event)).isEqualTo("foo");
+        assertThat(requiredKey(event)).isEqualTo("foo");
     }
 
     @Test
     public void shouldCreateEventWithAddress() {
         Event<String> event = event(ImmutableMap.of(ADDRESS, "foo"), null);
-        assertThat(address(event)).isEqualTo("foo");
+        assertThat(requiredAddress(event)).isEqualTo("foo");
     }
 
     @Test
     public void shouldSendReply() {
         TestReplyHandler callback = new TestReplyHandler();
         Event<String> event = event(ImmutableMap.of(REPLY_CALLBACK, callback), null);
-        replyHandler(event).get().reply("response");
+        requiredReplyHandler(event).reply("response");
         assertThat(callback.response).isEqualTo("response");
     }
 
