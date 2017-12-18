@@ -22,9 +22,6 @@ import static java.util.Optional.ofNullable;
 
 public final class Headers {
 
-    private Headers() {
-    }
-
     public static final String ORIGINAL = "rxjava.event.original";
 
     public static final String ADDRESS = "rxjava.event.address";
@@ -32,6 +29,9 @@ public final class Headers {
     public static final String KEY = "rxjava.event.key";
 
     public static final String REPLY_CALLBACK = "rxjava.event.reply.callback";
+
+    private Headers() {
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> original(Event event, Class<T> type) {
